@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from item import Item
 
 # Declare all the rooms
 
@@ -22,6 +23,15 @@ chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
+# declare all the items
+item = {
+    'outside': Item('book', "Whould you like to read?"),
+    'foyer': Item('shoe', 'Or you want to stay barefoot?'),
+    'overlook': Item('mobile phone', "Take some photos"),
+    'narrow': Item('flash-light', 'It could be dark inside'),
+    'treasure': Item('coffee', 'It\'s a real treasure in the morning')
+}
+
 
 # Link rooms together
 
@@ -33,6 +43,13 @@ room['overlook'].s_to = room['foyer']
 room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
+
+# Link item to room
+room['outside'].add_item(item['outside'])
+room['foyer'].add_item(item['foyer'])
+room['overlook'].add_item(item['overlook'])
+room['narrow'].add_item(item['narrow'])
+room['treasure'].add_item(item['treasure'])
 
 #
 # Main
@@ -47,6 +64,10 @@ def try_direction(direction, current_room):
         print("You can't go that way")
         return current_room
 
+def display_item(item):
+    room_items = player.curr_room.item_list
+    return any(i.name == item for i in room_items)
+
 # Make a new player object that is currently in the 'outside' room.
 player = Player(input('Please enter your name here: '), room['outside'])
 
@@ -54,6 +75,9 @@ player = Player(input('Please enter your name here: '), room['outside'])
 # Write a loop that:
 #
 while True:
+    room_items = player.current_room.display_item()
+    if len(room_items) > 0:
+        print(f"There is a {room_items}\n")
     # * Prints the current room name
     # * Prints the current description (the textwrap module might be useful here).
     print(player.name + ", you are in " + player.current_room.name + "\n" + player.current_room.description)

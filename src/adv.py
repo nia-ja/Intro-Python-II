@@ -57,20 +57,19 @@ room['treasure'].add_item(item['treasure'])
 def try_direction(direction, current_room):
     attribute = direction + '_to'
 #see is the inputted direction is one we can move to
-    if hasattr(current_room, attribute):
+    if hasattr(current_room, attribute): # hasattr() returns True or False
         #get the new room
-        return getattr(current_room, attribute)
+        return getattr(current_room, attribute) # returns value for the current_room objects' attribute
     else:
         print("You can't go that way")
         return current_room
 
 def display_item(item):
-    room_items = player.curr_room.item_list
+    room_items = player.current_room.item_list
     return any(i.name == item for i in room_items)
 
 # Make a new player object that is currently in the 'outside' room.
 player = Player(input('Please enter your name here: '), room['outside'])
-
 
 # Write a loop that:
 #
@@ -93,6 +92,20 @@ while True:
         if action == 'q':
             print("see you soon!")
             break
+        ##TODO:
+        ## add additional commands "p" (= pick up an item) and "d" (= drop it)
+        # if action == 'p':
+        ## p -> 
+        ## 1. add to Player.item_list (need to create it in Player class, [] is default + method pick_item),
+            # player.get_item(room_items)
+            # print(f'Now you have {player.item_list}')
+        ## 2. delete from Room.item_list (create drop_item method in Room class)
+        ## continue (-> command prompt)
+        ## d ->
+        ## 1. print "Choose direction"
+        ## 2. continue (-> command prompt)
+
+        # will update current room attr for player object, if action is successful
         player.current_room = try_direction(action, player.current_room)
     else:
         print("Wrong command! But you can try again.")
@@ -102,4 +115,3 @@ while True:
 
 # If the user enters a cardinal direction, attempt to move to the room there.
 # Print an error message if the movement isn't allowed.
-#

@@ -57,32 +57,31 @@ room['treasure'].add_item(item['treasure'])
 def try_direction(direction, current_room):
     attribute = direction + '_to'
 #see is the inputted direction is one we can move to
-    if hasattr(current_room, attribute):
+    if hasattr(current_room, attribute): # hasattr() returns True or False
         #get the new room
-        return getattr(current_room, attribute)
+        return getattr(current_room, attribute) # returns value for the current_room objects' attribute
     else:
         print("You can't go that way")
         return current_room
 
 def display_item(item):
-    room_items = player.curr_room.item_list
+    room_items = player.current_room.item_list
     return any(i.name == item for i in room_items)
 
 # Make a new player object that is currently in the 'outside' room.
 player = Player(input('Please enter your name here: '), room['outside'])
 
-
 # Write a loop that:
 #
 while True:
     room_items = player.current_room.display_item()
-    if len(room_items) > 0:
-        print(f"There is a {room_items}\n")
     # * Prints the current room name
     # * Prints the current description (the textwrap module might be useful here).
     print(player.name + ", you are in " + player.current_room.name + "\n" + player.current_room.description)
+    if len(room_items) > 0:
+        print(f"There is a {room_items}. Do you want to pick it?\n")
     print(
-        'commands: \nq=Quit\nn=North\ne=Eastn\nw=West\ns=South\n')
+        'commands: \nq=Quit\nn=North\ne=Eastn\nw=West\ns=South\np=pick it up\ni=what I have?\n')
     # * Waits for user input and decides what to do.
     action = input("\n>").lower().split()
     # * Waits for user input and decides what to do.
@@ -93,13 +92,52 @@ while True:
         if action == 'q':
             print("see you soon!")
             break
-        player.current_room = try_direction(action, player.current_room)
+        # pick item
+        if action == 'p':
+            items = player.current_room.item_list
+            if len(items) > 0:
+                player.player_items.append(items[0])
+                items.remove(items[0])
+                print(f'Now you have {player.player_items[-1].name}')
+            else:
+                print('There\'s nothing there')
+        # inventory
+        if action == 'i':
+            items = player.player_items
+            if len(items) == 0:
+                print("You have NOTHING...")
+            else:
+                print("You have:\n")
+                for i in items:
+                    print(f'{items.index(i)} - {i.name}.\n')
+                print("Do you want to drop something?\nCommands:\nt=yes\nf=no\n")
+                new_action = input("\n>").lower().split()
+                #drop item
+                new_action = new_action[0][0]
+                if new_action == "t":
+                    print("print a number for the item: \n")
+                    # input for index
+                    choice = input("\n>").lower().split()
+                    choice = int(choice[0])
+                    print(choice)
+                    items = player.player_items
+                    room_items = player.current_room.item_list
+                    # add item by given index to player.current_room.item_list
+                    room_items.append(items[choice])
+                    # delete by index in player_items
+                    items.remove(items[choice])
+                #not
+                elif new_action == "f":
+                    print("ok\n")
+
+        # will update current room attr for player object, if action is successful
+        if action != "p":
+            if action != "i":
+                player.current_room = try_direction(action, player.current_room)
     else:
         print("Wrong command! But you can try again.")
         continue
 
 
-
 # If the user enters a cardinal direction, attempt to move to the room there.
 # Print an error message if the movement isn't allowed.
-#

@@ -14,7 +14,7 @@ class Room:
         output = ''
         # if no item in room, display nothing
         if len(self.item_list) == 0:
-            return None
+            return ""
         else:
             # display all items in the room for the user
             for item in self.item_list:

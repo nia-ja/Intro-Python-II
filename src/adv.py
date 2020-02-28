@@ -75,13 +75,13 @@ player = Player(input('Please enter your name here: '), room['outside'])
 #
 while True:
     room_items = player.current_room.display_item()
-    if len(room_items) > 0:
-        print(f"There is a {room_items}\n")
     # * Prints the current room name
     # * Prints the current description (the textwrap module might be useful here).
     print(player.name + ", you are in " + player.current_room.name + "\n" + player.current_room.description)
+    if len(room_items) > 0:
+        print(f"There is a {room_items}. Do you want to pick it?\n")
     print(
-        'commands: \nq=Quit\nn=North\ne=Eastn\nw=West\ns=South\n')
+        'commands: \nq=Quit\nn=North\ne=Eastn\nw=West\ns=South\np=pick it up\n')
     # * Waits for user input and decides what to do.
     action = input("\n>").lower().split()
     # * Waits for user input and decides what to do.
@@ -92,6 +92,15 @@ while True:
         if action == 'q':
             print("see you soon!")
             break
+        if action == 'p':
+            items = player.current_room.item_list
+            if len(items) > 0:
+                player.player_items.append(items[0])
+                items.remove(items[0])
+                print(f'Now you have {player.player_items[0]}')
+            else:
+                print('There\'s nothing there')
+
         ##TODO:
         ## add additional commands "p" (= pick up an item) and "d" (= drop it)
         # if action == 'p':

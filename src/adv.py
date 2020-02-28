@@ -109,21 +109,31 @@ while True:
             else:
                 print("You have:\n")
                 for i in items:
-                    print(f'{items.index(i)} - {i.name}')
-
-        ##TODO:
-        ## add additional commands "p" (= pick up an item) and "d" (= drop it)
-        # if action == 'p':
-        ## p -> 
-        ## 1. add to Player.item_list (need to create it in Player class, [] is default + method pick_item),
-            # player.get_item(room_items)
-            # print(f'Now you have {player.item_list}')
-        ## 2. delete from Room.item_list (create drop_item method in Room class)
-        ## continue (-> command prompt)
+                    print(f'{items.index(i)} - {i.name}.\n')
+                print("Do you want to drop something?\nCommands:\nt=yes\nf=no\n")
+                new_action = input("\n>").lower().split()
+                #drop item
+                new_action = new_action[0][0]
+                if new_action == "t":
+                    print("print a number for the item: \n")
+                    # input for index
+                    choice = input("\n>").lower().split()
+                    choice = int(choice[0])
+                    print(choice)
+                    items = player.player_items
+                    room_items = player.current_room.item_list
+                    # add item by given index to player.current_room.item_list
+                    room_items.append(items[choice])
+                    # delete by index in player_items
+                    items.remove(items[choice])
+                #not
+                elif new_action == "f":
+                    print("ok\n")
 
         # will update current room attr for player object, if action is successful
-        if action != "p" or action != "i":
-            player.current_room = try_direction(action, player.current_room)
+        if action != "p":
+            if action != "i":
+                player.current_room = try_direction(action, player.current_room)
     else:
         print("Wrong command! But you can try again.")
         continue

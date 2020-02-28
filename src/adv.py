@@ -81,7 +81,7 @@ while True:
     if len(room_items) > 0:
         print(f"There is a {room_items}. Do you want to pick it?\n")
     print(
-        'commands: \nq=Quit\nn=North\ne=Eastn\nw=West\ns=South\np=pick it up\n')
+        'commands: \nq=Quit\nn=North\ne=Eastn\nw=West\ns=South\np=pick it up\ni=what I have?\n')
     # * Waits for user input and decides what to do.
     action = input("\n>").lower().split()
     # * Waits for user input and decides what to do.
@@ -92,14 +92,24 @@ while True:
         if action == 'q':
             print("see you soon!")
             break
+        # pick item
         if action == 'p':
             items = player.current_room.item_list
             if len(items) > 0:
                 player.player_items.append(items[0])
                 items.remove(items[0])
-                print(f'Now you have {player.player_items[0]}')
+                print(f'Now you have {player.player_items[-1].name}')
             else:
                 print('There\'s nothing there')
+        # inventory
+        if action == 'i':
+            items = player.player_items
+            if len(items) == 0:
+                print("You have NOTHING...")
+            else:
+                print("You have:\n")
+                for i in items:
+                    print(f'{items.index(i)} - {i.name}')
 
         ##TODO:
         ## add additional commands "p" (= pick up an item) and "d" (= drop it)
@@ -110,16 +120,13 @@ while True:
             # print(f'Now you have {player.item_list}')
         ## 2. delete from Room.item_list (create drop_item method in Room class)
         ## continue (-> command prompt)
-        ## d ->
-        ## 1. print "Choose direction"
-        ## 2. continue (-> command prompt)
 
         # will update current room attr for player object, if action is successful
-        player.current_room = try_direction(action, player.current_room)
+        if action != "p" or action != "i":
+            player.current_room = try_direction(action, player.current_room)
     else:
         print("Wrong command! But you can try again.")
         continue
-
 
 
 # If the user enters a cardinal direction, attempt to move to the room there.
